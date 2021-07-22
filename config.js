@@ -1,0 +1,32 @@
+import dotenv from "dotenv";
+dotenv.config();
+
+function required(key, defaultValue = undefined) {
+  const value = process.env[key] || defaultValue;
+  if (value == null) {
+    throw new Error(`Key ${key} is undefined`);
+  }
+  return value;
+}
+
+export const config = {
+  jwt: {
+    secretKey: required("JWT_SECRET"),
+    expiresInSec: parseInt(required("JWT_EXPIRES_SEC", 86400)),
+  },
+  bcrypt: {
+    saltRounds: parseInt(required("BCRYPT_SALT_ROUNDS", 12)),
+  },
+  //port는 밖에 위치해야 한다.
+  port: parseInt(required("PORT", 8080)),
+  //cors option을 설정해 주고, app.js에서 호출.
+  cors: {
+    allowedOrigin: required("CORS_ALLOW_ORIGIN"),
+  },
+  db: {
+    host: required("DB_HOST"),
+    user: required("DB_USER"),
+    database: required("DB_DATABASE"),
+    password: required("DB_PASSWORD"),
+  },
+};
